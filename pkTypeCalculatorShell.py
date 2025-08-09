@@ -64,24 +64,27 @@ def typecalc(hassecondtype, atkOrDef):
     strength_elements = set(current_pokemon["pokemon_strength"])
     weakness_elements = set(current_pokemon["pokemon_weakness"])
     incapable_elements = set(current_pokemon["pokemon_incapable"])
-
+    
+    global resettypebuffer
     def resettypebuffer():
         global typebuffer
         typebuffer = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
-
+    
+    global removeDuplicateDef
     def removeDuplicateDef():
         for element in vunerable_elements:
             for childElement in resistance_elements:
                 if element == childElement:
                     current_pokemon["pokemon_vunerable"].remove(element)
                     current_pokemon["pokemon_resistance"].remove(element)
-        
+    
+    global removeDuplicateAtk
     def removeDuplicateAtk():
         for element in typebuffer:
             for childElement in strength_elements:
                 if element == childElement:
                     typebuffer.remove(element)
-        print(f"weak ele{current_pokemon['pokemon_weakness']}")
+        print(f"strong ele{current_pokemon['pokemon_strength']}")
         for element in typebuffer:
             for childElement in weakness_elements:
                 if element == childElement:
@@ -91,6 +94,7 @@ def typecalc(hassecondtype, atkOrDef):
             for childElement in incapable_elements:
                 if element == childElement:
                     typebuffer.remove(element)
+        print(f"incap ele{current_pokemon['pokemon_incapable']}")
         print(typebuffer)
         for element in current_pokemon['normalAtk']:
             for childElement in typebuffer:
@@ -120,20 +124,20 @@ def typecalc(hassecondtype, atkOrDef):
     if hassecondtype:
         removeDuplicateDef()
 
-
+    global printStrength
     def printStrength():
         generalWarning("pokemon deals double damage against these types")
         for element in current_pokemon["pokemon_strength"]:
             printtext(f"{element}x2")
         return current_pokemon["pokemon_strength"]
-
+    global printWeakness
     def printWeakness():
         generalWarning("pokemon deals half damage against these types")
         for element in current_pokemon["pokemon_weakness"]:
             printtext(f"{element}x0.5")
         return current_pokemon["pokemon_weakness"]
         
-
+    global printIncapable
     def printIncapable():
         generalWarning("pokemon deals no damage against these types")
         for element in current_pokemon["pokemon_incapable"]:
@@ -144,7 +148,7 @@ def typecalc(hassecondtype, atkOrDef):
         #    if countedElement == 2:
         #        current_pokemon["pokemon_incapable"].remove(element)
         #        printtext(f"{element}")
-    
+    global printNormalattack
     def printNormalattack():
         generalWarning("pokemon deals neutral damage against these types")
         for item in current_pokemon['normalAtk']:
@@ -213,7 +217,6 @@ def typecalc(hassecondtype, atkOrDef):
 
     if atkOrDef == "attack":
         removeDuplicateAtk()
-        printStrength()
         printWeakness()
         printIncapable()
         printNormalattack()
@@ -250,6 +253,7 @@ current_pokemon = {
 }
 
 def maketypecall(pktype):
+    global choice
     typeGlossary = f"{rootFolder}{path2glossary}index.json"
     try:
         with open(typeGlossary, "r") as file:
@@ -284,6 +288,9 @@ def maketypecall(pktype):
                     incapable_list = content["damage_relations"]["no_damage_to"]
                     for item in incapable_list:
                         current_pokemon["pokemon_incapable"].append(item["name"])
+                    
+                    if choice == "attack":
+                        typecalc(False,choice)
             except FileNotFoundError:
                 printtext("pokemon type file not found")
     except FileNotFoundError:
@@ -295,6 +302,7 @@ def main():
     try:
         while running:
             while inMenu:
+                global choice
                 choice = str(input("what type match up would you like to calculate?\n attack or defense?: ")).lower()
                 if choice == "attack":
                     inMenu = False
@@ -304,7 +312,6 @@ def main():
                     print(f"{choice} was invalid")
             
             if choice == "attack":
-                hassecondtype = False
                 while True:
                     attacktype = str(input("please input an attacking pokemon type (F to finish): ")).lower()
                     if attacktype == "f":
@@ -314,9 +321,9 @@ def main():
                             for item in current_pokemon['normalAtk']:
                                 if item == attacktype:
                                     maketypecall(item)
+                                    printStrength()
                         except KeyboardInterrupt:
                             printtext("canceled")
-                typecalc(hassecondtype,choice)
                 clearCurrentPkmon()
                 inMenu = True
 
@@ -349,5 +356,5 @@ def main():
     printtext("goodbye")
 
 if __name__ == '__main__':
-    accessIni("i am terrible at this carreer")
+    accessIni("i am terrible at this")
     main()
