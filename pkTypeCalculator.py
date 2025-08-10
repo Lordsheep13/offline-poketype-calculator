@@ -267,18 +267,18 @@ class MainWindow(QMainWindow):
 
         if self.output_layout.currentIndex() == 0:
             hassecondtype = False
-            maketypecall(self.input_second_type_combo.currentText())
+            #maketypecall(self.input_second_type_combo.currentText())
 
         if self.output_layout.currentIndex() == 1:
             if self.input_type_combo.currentIndex() > -1:
                 if self.input_second_type_combo.currentIndex() > -1:
                     if not self.input_type_combo.currentIndex() == self.input_second_type_combo.currentIndex():
                         hassecondtype = True
-                        maketypecall(self.input_second_type_combo.currentText())
+                        #maketypecall(self.input_second_type_combo.currentText())
 
 
 
-            maketypecall(self.input_type_combo.currentText())
+            #maketypecall(self.input_type_combo.currentText())
             #typecalc(hassecondtype)
             print(normalAtk)
             print(normalDef)

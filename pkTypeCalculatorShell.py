@@ -8,13 +8,14 @@ import collections
 import configparser
 import time
 
-textbarrier = "*********************************************"
+
 
 def printtext(message=' '):
     if __name__ == '__main__':
         print(message)
 
 def generalWarning(message):
+    textbarrier = "*********************************************"
     if __name__ == '__main__':
         print()
         print(textbarrier)
@@ -65,12 +66,8 @@ def typecalc(hassecondtype, atkOrDef):
     weakness_elements = set(current_pokemon["pokemon_weakness"])
     incapable_elements = set(current_pokemon["pokemon_incapable"])
     
-    global resettypebuffer
-    def resettypebuffer():
-        global typebuffer
-        typebuffer = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
     
-    global removeDuplicateDef
+    
     def removeDuplicateDef():
         for element in vunerable_elements:
             for childElement in resistance_elements:
@@ -78,23 +75,7 @@ def typecalc(hassecondtype, atkOrDef):
                     current_pokemon["pokemon_vunerable"].remove(element)
                     current_pokemon["pokemon_resistance"].remove(element)
     
-    global removeDuplicateAtk
     def removeDuplicateAtk():
-        for element in typebuffer:
-            for childElement in strength_elements:
-                if element == childElement:
-                    typebuffer.remove(element)
-        print(f"strong ele{current_pokemon['pokemon_strength']}")
-        for element in typebuffer:
-            for childElement in weakness_elements:
-                if element == childElement:
-                    typebuffer.remove(element)
-        print(f"weak ele{current_pokemon['pokemon_weakness']}")
-        for element in typebuffer:
-            for childElement in incapable_elements:
-                if element == childElement:
-                    typebuffer.remove(element)
-        print(f"incap ele{current_pokemon['pokemon_incapable']}")
         print(typebuffer)
         for element in current_pokemon['normalAtk']:
             for childElement in typebuffer:
@@ -104,7 +85,6 @@ def typecalc(hassecondtype, atkOrDef):
                     print(f"{element} was destroyed")
                     current_pokemon['normalAtk'].remove(element)
         print(typebuffer)
-        resettypebuffer()
 
 
         #for element in strength_elements:
@@ -124,110 +104,107 @@ def typecalc(hassecondtype, atkOrDef):
     if hassecondtype:
         removeDuplicateDef()
 
-    global printStrength
-    def printStrength():
-        generalWarning("pokemon deals double damage against these types")
-        for element in current_pokemon["pokemon_strength"]:
-            printtext(f"{element}x2")
-        return current_pokemon["pokemon_strength"]
-    global printWeakness
-    def printWeakness():
-        generalWarning("pokemon deals half damage against these types")
-        for element in current_pokemon["pokemon_weakness"]:
-            printtext(f"{element}x0.5")
-        return current_pokemon["pokemon_weakness"]
-        
-    global printIncapable
-    def printIncapable():
-        generalWarning("pokemon deals no damage against these types")
-        for element in current_pokemon["pokemon_incapable"]:
-            printtext(f"{element}x0")
-        return current_pokemon["pokemon_incapable"]
-        #for element in incapable_elements:
-        #    countedElement = current_pokemon["pokemon_incapable"].count(element)
-        #    if countedElement == 2:
-        #        current_pokemon["pokemon_incapable"].remove(element)
-        #        printtext(f"{element}")
-    global printNormalattack
-    def printNormalattack():
-        generalWarning("pokemon deals neutral damage against these types")
-        for item in current_pokemon['normalAtk']:
-            printtext(f"{item}x1")
-
-    def calcVunerable(hassecondtype):
-        if not hassecondtype:
-            generalWarning("pokemon recieves double damage from these types")
-            for item in current_pokemon["pokemon_vunerable"]:
-                printtext(f"{item}x2")
-            return current_pokemon["pokemon_vunerable"]
-        elif hassecondtype:
-            generalWarning("pokemon recieves double/quad damage from these types")
-            for element in vunerable_elements:
-                countedElement = current_pokemon["pokemon_vunerable"].count(element)
-                if countedElement == 1:
-                    printtext(f"{element}x2")
-                elif countedElement == 2:
-                    printtext(f"{element}x4")
-            return current_pokemon["pokemon_vunerable"]
-
-    def calcResistance(hassecondtype):
-        if not hassecondtype:
-            generalWarning("pokemon recieves half damage from these types")
-            for item in current_pokemon["pokemon_resistance"]:
-                printtext(f"{item}x0.5")
-            return current_pokemon["pokemon_resistance"]
-        elif hassecondtype:
-            generalWarning("pokemon recieves half/quarter damage from these types")
-            for element in resistance_elements:
-                countedElement = current_pokemon["pokemon_resistance"].count(element)
-                if countedElement == 1:
-                    printtext(f"{element}x0.5")
-                elif countedElement == 2:
-                    printtext(f"{element}x0.25")
-            return current_pokemon["pokemon_resistance"]
-
-    def calcImmune(hassecondtype):
-        generalWarning("pokemon recieves no damage from these types")
-        for element in immune_elements:
-            printtext(f"{element}x0")
-        return current_pokemon["pokemon_immunity"]
-
-
-    def calcNormaldefense():
-        #printtext(normalDef)
-        for item in current_pokemon['pokemon_resistance']:
-            for item2 in normalDef:
-                if item == item2:
-                    normalDef.remove(item)
-        #printtext(normalDef)
-        for item in current_pokemon['pokemon_vunerable']:
-            for item2 in normalDef:
-                if item == item2:
-                    normalDef.remove(item)
-        #printtext(normalDef)
-        for item in current_pokemon['pokemon_immunity']:
-            for item2 in normalDef:
-                if item == item2:
-                    normalDef.remove(item)
-        generalWarning("pokemon recieves neutral damage against these types")
-        for item in normalDef:
-            printtext(f"{item}x1")
-
-
-
     if atkOrDef == "attack":
         removeDuplicateAtk()
-        printWeakness()
-        printIncapable()
-        printNormalattack()
-
     elif atkOrDef == "defense":
         calcImmune(hassecondtype)
         calcResistance(hassecondtype)
         calcVunerable(hassecondtype)
         calcNormaldefense()
 
+def resettypebuffer():
+        global typebuffer
+        typebuffer = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
 
+def calcVunerable(hassecondtype):
+    if not hassecondtype:
+        generalWarning("pokemon recieves double damage from these types")
+        for item in current_pokemon["pokemon_vunerable"]:
+            printtext(f"{item}x2")
+        return current_pokemon["pokemon_vunerable"]
+    elif hassecondtype:
+        generalWarning("pokemon recieves double/quad damage from these types")
+        for element in vunerable_elements:
+            countedElement = current_pokemon["pokemon_vunerable"].count(element)
+            if countedElement == 1:
+                printtext(f"{element}x2")
+            elif countedElement == 2:
+                printtext(f"{element}x4")
+        return current_pokemon["pokemon_vunerable"]
+
+def calcResistance(hassecondtype):
+    if not hassecondtype:
+        generalWarning("pokemon recieves half damage from these types")
+        for item in current_pokemon["pokemon_resistance"]:
+            printtext(f"{item}x0.5")
+        return current_pokemon["pokemon_resistance"]
+    elif hassecondtype:
+        generalWarning("pokemon recieves half/quarter damage from these types")
+        for element in resistance_elements:
+            countedElement = current_pokemon["pokemon_resistance"].count(element)
+            if countedElement == 1:
+                printtext(f"{element}x0.5")
+            elif countedElement == 2:
+                printtext(f"{element}x0.25")
+        return current_pokemon["pokemon_resistance"]
+
+def calcImmune(hassecondtype):
+    generalWarning("pokemon recieves no damage from these types")
+    for element in immune_elements:
+        printtext(f"{element}x0")
+    return current_pokemon["pokemon_immunity"]
+
+
+def calcNormaldefense():
+    #printtext(normalDef)
+    for item in current_pokemon['pokemon_resistance']:
+        for item2 in normalDef:
+            if item == item2:
+                normalDef.remove(item)
+    #printtext(normalDef)
+    for item in current_pokemon['pokemon_vunerable']:
+        for item2 in normalDef:
+            if item == item2:
+                normalDef.remove(item)
+    #printtext(normalDef)
+    for item in current_pokemon['pokemon_immunity']:
+        for item2 in normalDef:
+            if item == item2:
+                normalDef.remove(item)
+    generalWarning("pokemon recieves neutral damage against these types")
+    for item in normalDef:
+        printtext(f"{item}x1")
+
+def printStrength():
+    generalWarning("pokemon deals double damage against these types")
+    for element in current_pokemon["pokemon_strength"]:
+        printtext(f"{element}x2")
+    return current_pokemon["pokemon_strength"]
+
+
+def printWeakness():
+    generalWarning("pokemon deals half damage against these types")
+    for element in current_pokemon["pokemon_weakness"]:
+        printtext(f"{element}x0.5")
+    return current_pokemon["pokemon_weakness"]
+    
+
+def printIncapable():
+    generalWarning("pokemon deals no damage against these types")
+    for element in current_pokemon["pokemon_incapable"]:
+        printtext(f"{element}x0")
+    return current_pokemon["pokemon_incapable"]
+
+    #for element in incapable_elements:
+    #    countedElement = current_pokemon["pokemon_incapable"].count(element)
+    #    if countedElement == 2:
+    #        current_pokemon["pokemon_incapable"].remove(element)
+    #        printtext(f"{element}")
+
+def printNormalattack():
+    generalWarning("pokemon deals neutral damage against these types")
+    for item in current_pokemon['normalAtk']:
+        printtext(f"{item}x1")
 
 def clearCurrentPkmon():
     for key in current_pokemon:
@@ -238,6 +215,7 @@ def clearCurrentPkmon():
 
 global typebuffer
 typebuffer = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
+
 global current_pokemon
 current_pokemon = {
     #defense
@@ -252,8 +230,7 @@ current_pokemon = {
     "normalAtk" : ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
 }
 
-def maketypecall(pktype):
-    global choice
+def maketypecall(pktype, choice, hassecondtype=False):
     typeGlossary = f"{rootFolder}{path2glossary}index.json"
     try:
         with open(typeGlossary, "r") as file:
@@ -264,6 +241,9 @@ def maketypecall(pktype):
             try:
                 with open(f"{rootFolder}{nextpath}index.json","r") as file:
                     content = json.load(file)
+                    resettypebuffer()
+
+                    #defense
 
                     vunerable_list = content["damage_relations"]["double_damage_from"]
                     for item in vunerable_list:
@@ -277,20 +257,88 @@ def maketypecall(pktype):
                     for item in immunity_list:
                         current_pokemon["pokemon_immunity"].append(item["name"])
 
+                    #attack
+
                     strength_list = content["damage_relations"]["double_damage_to"]
                     for item in strength_list:
-                        current_pokemon["pokemon_strength"].append(item["name"])
+                        counted = current_pokemon['pokemon_strength'].count(item['name'])
+                        if counted == 0:
+                            current_pokemon["pokemon_strength"].append(item["name"])
+                    for item in strength_list:
+                        for element in typebuffer:
+                            if element == item['name']:
+                                typebuffer.remove(element)
+                    print(f"strong ele{current_pokemon['pokemon_strength']}")
 
                     weakness_list = content["damage_relations"]["half_damage_to"]
                     for item in weakness_list:
-                        current_pokemon["pokemon_weakness"].append(item["name"])
-
+                        counted = current_pokemon['pokemon_weakness'].count(item['name'])
+                        if counted == 0:
+                            current_pokemon['pokemon_weakness'].append(item["name"])
+                    for item in weakness_list:
+                        for element in typebuffer:
+                            if element == item['name']:
+                                typebuffer.remove(element)
+                    print(f"weak ele{current_pokemon['pokemon_weakness']}")
+                    
                     incapable_list = content["damage_relations"]["no_damage_to"]
                     for item in incapable_list:
-                        current_pokemon["pokemon_incapable"].append(item["name"])
-                    
-                    if choice == "attack":
-                        typecalc(False,choice)
+                        counted = current_pokemon['pokemon_incapable'].count(item['name'])
+                        if counted == 0:
+                            current_pokemon['pokemon_incapable'].append(item["name"])
+                    for item in incapable_list:
+                        for element in typebuffer:
+                            if element == item['name']:
+                                typebuffer.remove(element)
+                    print(f"incap ele{current_pokemon['pokemon_incapable']}")
+
+                    print()
+                    print(current_pokemon)
+                    print("before")
+                    print(typebuffer)
+                    print(current_pokemon['normalAtk'])
+                    for element in current_pokemon['normalAtk']:
+                        for childElement in typebuffer:
+                            if typebuffer.count(element) == -1:
+                                current_pokemon['normalAtk'].remove(element)
+                    print("after")
+                    print(typebuffer)
+                    print(current_pokemon['normalAtk'])
+                    print()
+                    print(current_pokemon)
+                    print()
+
+                    for element in current_pokemon['pokemon_weakness']:
+                        for item in current_pokemon['pokemon_incapable']:
+                            if element == item:
+                                current_pokemon['pokemon_incapable'].remove(item)
+                    print(current_pokemon['normalAtk'])
+                    for element in current_pokemon['normalAtk']:
+                        for item in current_pokemon['pokemon_weakness']:
+                            if element == item:
+                                current_pokemon['pokemon_weakness'].remove(item)
+                        for item in current_pokemon['pokemon_incapable']:
+                            if element == item:
+                                current_pokemon['pokemon_incapable'].remove(item)
+                    print(current_pokemon['normalAtk'])
+                    for element in current_pokemon['pokemon_strength']:
+                        for item in current_pokemon['normalAtk']:
+                            if element == item:
+                                current_pokemon['normalAtk'].remove(item)
+                        for item in current_pokemon['pokemon_weakness']:
+                            if element == item:
+                                current_pokemon['pokemon_weakness'].remove(item)
+                        for item in current_pokemon['pokemon_incapable']:
+                            if element == item:
+                                current_pokemon['pokemon_incapable'].remove(item)
+                    print(current_pokemon['normalAtk'])
+
+                    #if choice == "attack":
+                        #typecalc(False,choice)
+
+                    if choice == "defense":
+                        typecalc(hassecondtype,choice)
+
             except FileNotFoundError:
                 printtext("pokemon type file not found")
     except FileNotFoundError:
@@ -302,7 +350,6 @@ def main():
     try:
         while running:
             while inMenu:
-                global choice
                 choice = str(input("what type match up would you like to calculate?\n attack or defense?: ")).lower()
                 if choice == "attack":
                     inMenu = False
@@ -320,10 +367,14 @@ def main():
                         try:
                             for item in current_pokemon['normalAtk']:
                                 if item == attacktype:
-                                    maketypecall(item)
-                                    printStrength()
+                                    maketypecall(item, choice)
                         except KeyboardInterrupt:
                             printtext("canceled")
+                #print pk types
+                printStrength()
+                printNormalattack()
+                printWeakness()
+                printIncapable()
                 clearCurrentPkmon()
                 inMenu = True
 
@@ -335,17 +386,20 @@ def main():
                     if not type1.isalpha():
                             generalWarning("you MUST enter a primary typing")
                     else:
-                        hasNoFirstType = False
+                        for item in current_pokemon['normalAtk']:
+                            if item == type1:
+                                hasNoFirstType = False
 
                 type2 = str(input("what is the second type of your pokemon?: ")).lower()
                 if type2.isalpha():
-                    hassecondtype = True
-                    maketypecall(type2)
+                    for item in current_pokemon['normalAtk']:
+                        if item == type2:
+                            hassecondtype = True
+                            maketypecall(type2, choice, hassecondtype)
                 else:
                     generalWarning("skipping secondary typing")
                 if type1.isalpha() and not type1 == type2:
-                    maketypecall(type1)
-                    typecalc(hassecondtype, choice)
+                    maketypecall(type1, choice, hassecondtype)
                     clearCurrentPkmon()
                     inMenu = True
                 else:
