@@ -24,6 +24,8 @@ def generalWarning(message):
         print()
         time.sleep(0.50)
 
+statictypes = ("normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy")
+
 def forcekill():
     sys.exit("the program has been forcefully terminated due to an error")
 
@@ -205,6 +207,7 @@ def printNormalattack():
     generalWarning("pokemon deals neutral damage against these types")
     for item in current_pokemon['normalAtk']:
         printtext(f"{item}x1")
+    return current_pokemon["normalAtk"]
 
 def clearCurrentPkmon():
     for key in current_pokemon:
@@ -360,14 +363,18 @@ def main():
             
             if choice == "attack":
                 while True:
-                    attacktype = str(input("please input an attacking pokemon type (F to finish): ")).lower()
+                    attacktype = str(input("please input an attacking pokemon type (f to finish): ")).lower()
                     if attacktype == "f":
                         break
                     elif attacktype.isalpha():
                         try:
-                            for item in current_pokemon['normalAtk']:
+                            for item in statictypes: 
                                 if item == attacktype:
-                                    maketypecall(item, choice)
+                                    maketypecall(attacktype, choice)
+                                elif not item == attacktype:
+                                    print("does not match")
+                                else:
+                                    print("not found")
                         except KeyboardInterrupt:
                             printtext("canceled")
                 #print pk types
