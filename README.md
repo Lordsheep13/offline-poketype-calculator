@@ -1,6 +1,7 @@
 # offline-poketype-calculator
 
-only dependencies are PyQt5
+only dependencies are gtk3
 
-currently the application is in a unfinished state,
-and i intend to change all of it to be written in C with gtk3 or gtk4
+C version of offline-poketype-calculator
+
+currently the application is in a unfinished state
